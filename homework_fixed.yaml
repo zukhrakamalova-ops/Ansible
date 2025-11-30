@@ -1,0 +1,60 @@
+---
+- name: Netology Ansible Homework
+  hosts: netology-ml
+  become: yes
+  vars:
+    packages:
+      - net-tools
+      - git
+      - tree
+      - htop
+      - mc
+      - vim
+    user_groups:
+      - name: devops_1
+        user: devops_1
+        home: /home/devops_1
+      - name: test_1  
+        user: test_1
+        home: /home/test_1
+
+  tasks:
+    - name: Test connection to hosts
+      ansible.builtin.ping:
+
+    - name: Install required packages (skip update)
+      package:
+        name: "{{ packages }}"
+        state: present
+
+    - name: Copy test.txt file
+      copy:
+        src: files/test.txt
+        dest: /tmp/test.txt
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create groups
+      group:
+        name: "{{ item.name }}"
+        state: present
+      loop: "{{ user_groups }}"
+
+    - name: Create users
+      user:
+        name: "{{ item.user }}"
+        group: "{{ item.name }}"
+        home: "{{ item.home }}"
+        create_home: yes
+        shell: /bin/bash
+      loop: "{{ user_groups }}"
+
+    - name: Create home directories
+      file:
+        path: "{{ item.home }}"
+        state: directory
+        owner: "{{ item.user }}"
+        group: "{{ item.name }}"
+        mode: '0755'
+      loop: "{{ user_groups }}"

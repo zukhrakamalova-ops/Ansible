@@ -1,0 +1,33 @@
+{
+echo "=== ПРОВЕРКА УСТАНОВЛЕННЫХ ПАКЕТОВ ==="
+which git
+which tree
+which htop
+which mc
+which vim
+echo ""
+
+echo "=== ПРОВЕРКА СКОПИРОВАННОГО ФАЙЛА ==="
+ls -la /tmp/test.txt
+echo "Содержимое файла:"
+cat /tmp/test.txt
+echo ""
+
+echo "=== ПРОВЕРКА СОЗДАННЫХ ПОЛЬЗОВАТЕЛЕЙ ==="
+id devops_1
+id test_1
+getent passwd devops_1
+getent passwd test_1
+echo ""
+
+echo "=== ПРОВЕРКА СОЗДАННЫХ ГРУПП ==="
+getent group devops_1
+getent group test_1
+echo ""
+
+echo "=== ПРОВЕРКА ДОМАШНИХ ДИРЕКТОРИЙ ==="
+echo "Директория devops_1:"
+ls -la /home/devops_1
+echo "Директория test_1:"
+ls -la /home/test_1
+} > check_results.log
